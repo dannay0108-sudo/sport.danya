@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>План тренировки — Training Center</title>
+
+<style>
+
+/* ===========================================
+   GLOBAL RESET + BASE THEME
+=========================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #000;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+  padding-bottom: 200px;
+}
+
+/* ===========================================
+      CUSTOM CURSOR (DOT + RING)
+=========================================== */
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  background: #fff;
+  border-radius: 50%;
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.cursor-ring {
+  width: 26px;
+  height: 26px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  position: fixed;
+  z-index: 9998;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  opacity: .4;
+  transition: .15s ease-out;
+}
+
+/* ===========================================
+           PARALLAX BACKGROUND
+=========================================== */
+.parallax-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 130%;
+  height: 130%;
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.18);
+  opacity: .25;
+  pointer-events: none;
+  z-index: -5;
+}
+
+/* lightweight base64 placeholders */
+#layer1 {
+  background-image: url("data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAA AFfFcSJAAAADUlEQVQI12P4//8/AwAI/AL+vOB0NQAAAABJRU5ErkJggg==");
+}
+
+#layer2 {
+  background-image: url("data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAA AFfFcSJAAAADUlEQVQI12P4//8/AwAI/AL+vOB0NQAAAABJRU5ErkJggg==");
+  opacity: .12;
+}
+
+/* ===========================================
+               FLOATING ORBS
+=========================================== */
+.glow-orb {
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  background: radial-gradient(circle, #ffffff33, transparent 75%);
+  border-radius: 50%;
+  filter: blur(40px);
+  animation: orbMove 14s infinite alternate ease-in-out;
+  z-index: -3;
+}
+
+.glow1 { top: 12%; left: 8%; }
+.glow2 { bottom: 14%; right: 12%; }
+
+@keyframes orbMove {
+  0%   { transform: translate(0,0); }
+  100% { transform: translate(40px, -30px); }
+}
+
+/* ===========================================
+                LIGHT FOLLOW
+=========================================== */
+.light-follow {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, #ffffff22, transparent 80%);
+  pointer-events: none;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+/* ===========================================
+                   NAV BAR
+=========================================== */
+nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  padding: 28px 60px;
+  display: flex;
+  justify-content: space-between;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid #111;
+  z-index: 10;
+}
+
+nav a {
+  text-decoration: none;
+  color: #fff;
+  font-weight: bold;
+  transition: .3s;
+}
+
+nav a:hover {
+  color: #ccc;
+}
+
+/* ===========================================
+                    HEADER
+=========================================== */
+.header {
+  padding-top: 160px;
+  text-align: center;
+  animation: fadeHeader 1.4s ease forwards;
+  opacity: 0;
+}
+
+.header h1 {
+  font-size: 42px;
+  font-weight: 200;
+  letter-spacing: 1px;
+}
+
+.header p {
+  margin-top: 10px;
+  color: #bbb;
+  font-size: 18px;
+}
+
+@keyframes fadeHeader {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===========================================
+             LEVEL SELECTOR BLOCK
+=========================================== */
+.levels {
+  margin: 80px auto 40px auto;
+  max-width: 1000px;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.level {
+  width: 260px;
+  padding: 26px;
+  text-align: center;
+  border: 1px solid #111;
+  background: #0d0d0d;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: .3s;
+  transform-style: preserve-3d;
+}
+
+.level:hover {
+  background: #111;
+  transform: translateY(-6px) perspective(600px) rotateX(4deg);
+}
+
+.level.active {
+  border-color: #fff;
+  background: #1a1a1a;
+}
+
+/* icon that will be added later in part 2/5 */
+.level-icon {
+  width: 50px;
+  opacity: .8;
+  margin-bottom: 12px;
+  transition: .3s;
+  filter: drop-shadow(0 0 4px #ffffff44);
+}
+
+.level:hover .level-icon {
+  opacity: 1;
+  transform: translateY(-4px) scale(1.06);
+}
+
+/* ===========================================
+            TRAINING BLOCKS (EMPTY NOW)
+=========================================== */
+.training-blocks {
+  max-width: 900px;
+  margin: 40px auto;
+}
+
+/* day blocks — will be filled later */
+.day {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  padding: 24px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: .3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.day:hover {
+  transform: translateY(-6px) perspective(600px) rotateX(3deg);
+  border-color: #fff;
+}
+
+/* intensity indicator (will animate later) */
+.burn-line {
+  position: absolute;
+  width: 5px;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: linear-gradient(to bottom, #ff0000cc, #ffff00aa);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: .7s ease;
+}
+
+.day:hover .burn-line {
+  transform: scaleY(1);
+}
+
+/* hidden details block */
+.details {
+  margin-top: 16px;
+  display: none;
+  line-height: 1.6;
+  animation: fadeDetails .5s ease forwards;
+}
+
+@keyframes fadeDetails {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+
+<body>
+
+<!-- LIGHT FOLLOW -->
+<div class="light-follow" id="light"></div>
+
+<!-- PARALLAX LAYERS -->
+<div class="parallax-layer" id="layer1"></div>
+<div class="parallax-layer" id="layer2"></div>
+
+<!-- FLOATING ORBS -->
+<div class="glow-orb glow1"></div>
+<div class="glow-orb glow2"></div>
+
+<!-- CUSTOM CURSOR -->
+<div class="cursor-dot"></div>
+<div class="cursor-ring"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html">← Назад</a>
+  <a href="#">Training Center</a>
+</nav>
+
+<!-- HEADER -->
+<div class="header">
+  <h1>План тренировки</h1>
+  <p>Выбери уровень и открой детали</p>
+</div>
+
+<!-- LEVEL SELECT -->
+<div class="levels">
+  <!-- иконки добавим в части 2/5 -->
+  <div class="level" onclick="selectLevel('beginner')">Новичок</div>
+  <div class="level" onclick="selectLevel('intermediate')">Средний</div>
+  <div class="level" onclick="selectLevel('pro')">Профи</div>
+</div>
+
+<!-- TRAINING BLOCKS AREA -->
+<div id="trainingBlocks" class="training-blocks"></div>
+
+<script>
+/* CUSTOM CURSOR */
+const dot = document.querySelector('.cursor-dot');
+const ring = document.querySelector('.cursor-ring');
+
+document.addEventListener('mousemove', (e)=>{
+  dot.style.left = e.clientX + 'px';
+  dot.style.top  = e.clientY + 'px';
+  ring.style.left = e.clientX + 'px';
+  ring.style.top  = e.clientY + 'px';
+});
+
+/* LIGHT FOLLOW */
+const light = document.getElementById("light");
+document.addEventListener("mousemove", (e)=>{
+  light.style.left = e.clientX + "px";
+  light.style.top  = e.clientY + "px";
+});
+
+/* PARALLAX MOUSE MOVE */
+const layer1 = document.getElementById("layer1");
+const layer2 = document.getElementById("layer2");
+
+document.addEventListener("mousemove", (e)=>{
+  let x = (e.clientX / window.innerWidth - 0.5) * 2;
+  let y = (e.clientY / window.innerHeight - 0.5) * 2;
+
+  layer1.style.transform = `translate(${x * 18}px, ${y * 18}px) scale(1.18)`;
+  layer2.style.transform = `translate(${x * 12}px, ${y * 12}px) scale(1.18)`;
+});
+
+/* PARALLAX SCROLL */
+window.addEventListener("scroll", ()=>{
+  const s = window.scrollY;
+  layer1.style.transform = `translateY(${s * 0.17}px) scale(1.18)`;
+  layer2.style.transform = `translateY(${s * 0.09}px) scale(1.18)`;
+});
